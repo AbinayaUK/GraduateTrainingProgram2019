@@ -1,0 +1,846 @@
+PROBLEM SET 05:
+================
+
+
+TABLE CREATION:
+================
+
+create table place (
+ place_no INTEGER NOT NULL PRIMARY KEY
+,place_town VARCHAR(20)
+,place_country  VARCHAR(20)
+ );
+create table musician 
+  (
+ m_no INTEGER NOT NULL PRIMARY KEY
+,m_name VARCHAR(20)
+ ,born DATE
+ ,died DATE
+,born_in INTEGER
+,living_in INTEGER
+ );
+create table performer (
+ perf_no integer not null primary key
+,perf_is integer
+,instrument varchar(20) not null
+,perf_type  varchar(20) 
+ default 'not known' 
+ );
+create table composer (
+  comp_no integer not null    primary key,
+  comp_is integer not null  references musician (m_no),
+  comp_type varchar(10)
+  );
+create table band (
+ band_no INTEGER NOT NULL PRIMARY KEY
+,band_name VARCHAR(20)
+,band_home INTEGER NOT NULL REFERENCES PLACE (place_no)
+,band_type VARCHAR(10)
+ ,b_date DATE
+,band_contact INTEGER NOT NULL REFERENCES musician (m_no)
+ );
+create table plays_in
+  (
+  player integer not null references performer (perf_no),
+  band_id integer not null references band (band_no),
+  primary key ( player, band_id)
+  );
+create table composition
+  (
+  c_no integer not null primary key,
+ comp_date DATE,
+  c_title varchar(40) not null,
+  c_in integer references place (place_no)
+  );
+create table has_composed
+  (
+  cmpr_no integer not null  references composer (comp_no),
+  cmpn_no integer not null  references composition (c_no),
+  primary key ( cmpr_no, cmpn_no )
+  );
+create table concert
+  (
+  concert_no integer not null primary key,
+  concert_venue varchar(20),
+  concert_in  integer not null references place (place_no),
+ con_date DATE,
+  concert_orgniser integer references musician (m_no)
+  );
+create table performance
+  (
+  pfrmnc_no integer not null primary key,
+  gave    integer references band (band_no),
+  performed integer references composition (c_no),
+  conducted_by  integer references musician (m_no),
+  performed_in  integer references concert (concert_no)
+  );
+
+
+insert into concert values(1,'Bridgewater Hall',1,'1995-01-06',21); 
+insert into concert values(2,'Bridgewater Hall',1,'1996-05-08',3); 
+insert into concert values(3,'Usher Hall',2,'1995-06-03',3); 
+insert into concert values(4,'Assembly Rooms',2,'1997-09-20',21); 
+insert into concert values(5,'Festspiel Haus',3,'1995-02-21',8); 
+insert into concert values(6,'Royal Albert Hall',7,'1993-04-12',8); 
+insert into concert values(7,'Concertgebouw',9,'1993-01-14',8); 
+insert into concert values(8,'Metropolitan',4,'1997-01-15',21); 
+
+insert into plays_in values(1,1);
+insert into plays_in values(1,7);
+insert into plays_in values(3,1);
+insert into plays_in values(4,1);
+insert into plays_in values(4,7);
+insert into plays_in values(5,1);
+insert into plays_in values(6,1);
+insert into plays_in values(6,7);
+insert into plays_in values(7,1);
+insert into plays_in values(8,1);
+insert into plays_in values(8,7);
+insert into plays_in values(10,2);
+insert into plays_in values(12,2);
+insert into plays_in values(13,2);
+insert into plays_in values(14,2);
+insert into plays_in values(14,8);
+insert into plays_in values(15,2);
+insert into plays_in values(15,8);
+insert into plays_in values(17,2);
+insert into plays_in values(18,2);
+insert into plays_in values(19,3);
+insert into plays_in values(20,3);
+insert into plays_in values(21,4);
+insert into plays_in values(22,4);
+insert into plays_in values(23,4);
+insert into plays_in values(25,5);
+insert into plays_in values(26,6);
+insert into plays_in values(27,6);
+insert into plays_in values(28,7);
+insert into plays_in values(28,8);
+insert into plays_in values(29,7);
+
+insert into band (band_no, band_name , band_home, band_type, b_date, band_contact) values(1,'ROP',5,'classical','30/01/01',11);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(2,'AASO',6,'classical',10);
+insert into band (band_no, band_name , band_home, band_type, band_contact) values(3,'The J Bs',8,'jazz',12);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(4,'BBSO',9,'classical',21);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(5,'The left Overs',2,'jazz',8);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(6,'Somebody Loves this',1,'jazz',6);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(7,'Oh well',4,'classical',3);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(8,'Swinging strings',4,'classical',7);
+insert into band (band_no, band_name , band_home, band_type,band_contact) values(9,'The Rest',9,'jazz',16);
+
+insert into composer(comp_no,comp_is,comp_type) values(1,1,'jazz');
+insert into composer(comp_no,comp_is,comp_type) values(2,3,'classical');
+insert into composer(comp_no,comp_is,comp_type) values(3,5,'jazz');
+insert into composer(comp_no,comp_is,comp_type) values(4,7,'classical');
+insert into composer(comp_no,comp_is,comp_type) values(5,9,'jazz');
+insert into composer(comp_no,comp_is,comp_type) values(6,11,'rock');
+insert into composer(comp_no,comp_is,comp_type) values(7,13,'classical');
+insert into composer(comp_no,comp_is,comp_type) values(8,15,'jazz');
+insert into composer(comp_no,comp_is,comp_type) values(9,17,'classical');
+insert into composer(comp_no,comp_is,comp_type) values(10,19,'jazz');
+insert into composer(comp_no,comp_is,comp_type) values(11,10,'rock');
+insert into composer(comp_no,comp_is,comp_type) values(12,8,'jazz');
+
+insert into has_composed values(1,1);
+insert into has_composed values(1,8);
+insert into has_composed values(2,11);
+insert into has_composed values(3,2);
+insert into has_composed values(3,13);
+insert into has_composed values(3,14);
+insert into has_composed values(3,18);
+insert into has_composed values(4,12);
+insert into has_composed values(4,20);
+insert into has_composed values(5,3);
+insert into has_composed values(5,13);
+insert into has_composed values(5,14);
+insert into has_composed values(6,15);
+insert into has_composed values(6,21);
+insert into has_composed values(7,4);
+insert into has_composed values(7,9);
+insert into has_composed values(8,16);
+insert into has_composed values(9,5);
+insert into has_composed values(9,10);
+insert into has_composed values(10,17);
+insert into has_composed values(11,6);
+insert into has_composed values(12,7);
+insert into has_composed values(12,19);
+
+insert into musician(m_no,m_name,born,born_in,living_in) values(1,'Fred Bloggs','48/01/02',1,2); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(2,'John Smith','50/03/03',3,4); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(3,'Helen Smyth','48/08/08',4,5); 
+insert into musician (m_no,m_name,born,died,born_in,living_in)values(4,'Harriet Smithson','09/05/09','80/09/20',5,6); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(5,'James First','65/06/10 ',7,7); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(6,'Theo Mengel','48/08/12',7,1); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(7,'Sue Little','45/02/21',8,9); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(8,'Harry Forte','51/02/28',1,8); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(9,'Phil Hot','42/06/30',2,7); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(10,'Jeff Dawn','45/12/12',3,6); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(11,'Rose Spring','48/05/25',4,5); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(12,'Davis Heavan','75/10/03',5,4); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(13,'Lovely Time','48/12/28',6,3); 
+insert into musician values(14,'Alan Fluff','35/01/15','97/05/15',7,2); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(15,'Tony Smythe','32/04/02',8,1); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(16,'James Quick','1924/08/02',9,2); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(17,  'Freda Miles',  '1920/07/04',    9 , 3); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(18,  'Elsie James',  '47/05/06',    8,  5); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(19,  'Andy Jones', ' 58/10/08',    7 , 6); 
+insert into musician values(20,'Louise Simpson','48/01/10','98/02/11',6,6); 
+insert into musician(m_no,m_name,born,born_in,living_in) values( 21,  'James Steeple',  '47/01/10',    5 , 6); 
+insert into musician(m_no,m_name,born,born_in,living_in) values(22,  'Steven Chaytors', '56/03/11',   6 , 7); 
+       
+insert into place values( 1 , 'Manchester',  'England');
+insert into  place values( 2 , 'Edinburgh',  'Scotland' );
+insert into  place values( 3 , 'Salzburg', 'Austria' );
+insert into  place values( 4 , 'New York','USA' );
+insert into place values( 5 , 'Birmingham' , 'England' );
+insert into  place values( 6 , 'Glasgow' ,'Scotland' );
+insert into  place values( 7 , 'London','England' );
+insert into  place values( 8 , 'Chicago' ,'USA');
+insert into  place values( 9 , 'Amsterdam' ,'Netherlands');
+
+ insert into composition (c_no,comp_date,c_title,c_in) values(1,  '75/06/17', 'Opus', 1); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(2 ,'76/07/21',  'Here Goes',  2); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(3 ,'81/12/14',  'Valiant Knight',  3); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(4 ,'82/01/12',  'Little Piece',  4); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(5 ,'85/03/13',  'Simple Song',  5); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(6 ,'86/04/14',  'Little Swing Song',  6); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(7 ,'87/05/13',  'Fast Journey',  7); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(8 ,'76/02/14',  'Simple Love Song',  8); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(9 ,'82/01/21',  'Complex Rythms',  9); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(10,'85/02/23',  'Drumming Rythms',  9); 
+insert into composition (c_no,comp_date,c_title,c_in) values(11,'78/03/18',  'Fast Drumming',  8); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(12 ,'84/08/13',  'Slow Song',  7); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(13 ,'68/09/14',  'Blue Roses',  6); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(14 ,'83/11/15',  'Velvet Rain',  5); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(15 ,'82/05/16',  'Cold Wind',  4); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(16 ,'83/06/18',  'After the Wind Blows',  3); 
+ insert into composition (c_no,c_title,c_in) values(17,'A Simple Piece',  2); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(18 ,'85/01/12',  'Long Rythms',  1); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(19,'88/02/12', 'Eastern Wind',  1); 
+ insert into composition (c_no,c_title,c_in) values(20,'Slow SymphonyBlowing',  2); 
+ insert into composition (c_no,comp_date,c_title,c_in) values(21 ,'90/07/12',  'A Last Song',  6); 
+       
+insert into performance values(1,1,1,21,1);
+insert into performance values( 2,  1,  3,  21 ,1 );
+insert into performance values(3,  1,  5,  21,  1);
+insert into performance values(4,  1,2,  1,  2);
+insert into performance values(5,  2,  4,  21,  2);
+insert into performance values(6,  2,  6,  21,  2);
+insert into performance values(7,  4,  19,  9,  3);
+insert into performance values(8,  4,  20,  10,  3);
+insert into performance values(9,  5,  12,  10,  4);
+insert into performance values(10, 5, 13,  11,  4);
+insert into performance values (11,  3,  5,  13,  5);
+insert into performance values(12 ,3,  6,  13,  5);
+insert into performance values(13,  3,  7,  13,  5);
+insert into performance values(14,  6,  20,  14,  6);
+insert into performance values(15,  8,  12,  15,  7);
+insert into performance values(16,  9,  16,  21,  8);
+insert into performance values(17,  9,  17,  21,  8);
+insert into performance values(18,  9,  18,  21,  8);
+insert into performance values(19,  9,  19,  21,  8);
+insert into performance values(20,  4,  12,  10,  3);
+  
+insert into performer values(1	,2,"violin","classical");
+insert into performer  values(2	,4	,"viola"	,"classical");
+insert into performer values(3	,6	,"banjo"	,"jazz");
+insert into performer values(4	,8	,"violin"	,"classical");
+insert into performer values(5	,12	,"guitar"	,"jazz");
+insert into performer values(6	,14	,"violin"	,"classical");
+insert into performer values(7	,16	,"trumpet"	,"jazz");
+insert into performer values(8	,18	,"viola"	,"classical");
+insert into performer values(9	,20	,"bass"	,"jazz");
+insert into performer values(10	,2	,"flute"	,"jazz");
+insert into performer values(11	,20	,"cornet"	,"jazz");
+insert into performer values(12	,6	,"violin"	,"jazz");
+insert into performer values(13	,8	,"drums"	,"jazz");
+insert into performer values(14	,10	,"violin"	,"classical");
+insert into performer values(15	,12	,"cello"	,"classical");
+insert into performer values(16	,14	,"viola"	,"classical");
+insert into performer values(17	,16	,"flute"	,"jazz");
+insert into performer values(18	,18	,"guitar"	,"not known");
+insert into performer values(19	,20	,"trombone",	"jazz");
+insert into performer values(20	,3	,"horn"	,"jazz");
+insert into performer values(21	,5	,"violin"	,"jazz");
+insert into performer values(22	,7	,"cello"	,"classical");
+insert into performer values(23	,2	,"bass"	,"jazz");
+insert into performer values(24	,4	,"violin"	,"jazz");
+insert into performer values(25	,6	,"drums"	,"classical");
+insert into performer values(26	,8	,"clarinet" ,"jazz");
+insert into performer values(27	,10      ,"bass"	,"jazz");
+insert into performer values(28	,12	,"viola"	,"classical");
+insert into performer values(29	,18	,"cello"	,"classical");
+
+
+mysql> select * from band;
++---------+---------------------+-----------+-----------+------------+--------------+
+| band_no | band_name           | band_home | band_type | b_date     | band_contact |
++---------+---------------------+-----------+-----------+------------+--------------+
+|       1 | ROP                 |         5 | classical | 2030-01-01 |           11 |
+|       2 | AASO                |         6 | classical | NULL       |           10 |
+|       3 | The J Bs            |         8 | jazz      | NULL       |           12 |
+|       4 | BBSO                |         9 | classical | NULL       |           21 |
+|       5 | The left Overs      |         2 | jazz      | NULL       |            8 |
+|       6 | Somebody Loves this |         1 | jazz      | NULL       |            6 |
+|       7 | Oh well             |         4 | classical | NULL       |            3 |
+|       8 | Swinging strings    |         4 | classical | NULL       |            7 |
+|       9 | The Rest            |         9 | jazz      | NULL       |           16 |
++---------+---------------------+-----------+-----------+------------+--------------+
+9 rows in set (0.03 sec)
+
+mysql> select * from composition;
++------+------------+----------------------+------+
+| c_no | comp_date  | c_title              | c_in |
++------+------------+----------------------+------+
+|    1 | 1975-06-17 | Opus                 |    1 |
+|    2 | 1976-07-21 | Here Goes            |    2 |
+|    3 | 1981-12-14 | Valiant Knight       |    3 |
+|    4 | 1982-01-12 | Little Piece         |    4 |
+|    5 | 1985-03-13 | Simple Song          |    5 |
+|    6 | 1986-04-14 | Little Swing Song    |    6 |
+|    7 | 1987-05-13 | Fast Journey         |    7 |
+|    8 | 1976-02-14 | Simple Love Song     |    8 |
+|    9 | 1982-01-21 | Complex Rythms       |    9 |
+|   10 | 1985-02-23 | Drumming Rythms      |    9 |
+|   11 | 1978-03-18 | Fast Drumming        |    8 |
+|   12 | 1984-08-13 | Slow Song            |    7 |
+|   13 | 2068-09-14 | Blue Roses           |    6 |
+|   14 | 1983-11-15 | Velvet Rain          |    5 |
+|   15 | 1982-05-16 | Cold Wind            |    4 |
+|   16 | 1983-06-18 | After the Wind Blows |    3 |
+|   17 | NULL       | A Simple Piece       |    2 |
+|   18 | 1985-01-12 | Long Rythms          |    1 |
+|   19 | 1988-02-12 | Eastern Wind         |    1 |
+|   20 | NULL       | Slow SymphonyBlowing |    2 |
+|   21 | 1990-07-12 | A Last Song          |    6 |
++------+------------+----------------------+------+
+21 rows in set (0.00 sec)
+
+mysql> select * from plays_in;
++--------+---------+
+| player | band_id |
++--------+---------+
+|      1 |       1 |
+|      1 |       7 |
+|      3 |       1 |
+|      4 |       1 |
+|      4 |       7 |
+|      5 |       1 |
+|      6 |       1 |
+|      6 |       7 |
+|      7 |       1 |
+|      8 |       1 |
+|      8 |       7 |
+|     10 |       2 |
+|     12 |       2 |
+|     13 |       2 |
+|     14 |       2 |
+|     14 |       8 |
+|     15 |       2 |
+|     15 |       8 |
+|     17 |       2 |
+|     18 |       2 |
+|     19 |       3 |
+|     20 |       3 |
+|     21 |       4 |
+|     22 |       4 |
+|     23 |       4 |
+|     25 |       5 |
+|     26 |       6 |
+|     27 |       6 |
+|     28 |       7 |
+|     28 |       8 |
+|     29 |       7 |
++--------+---------+
+31 rows in set (0.02 sec)
+
+mysql> select * from composer;
++---------+---------+-----------+
+| comp_no | comp_is | comp_type |
++---------+---------+-----------+
+|       1 |       1 | jazz      |
+|       2 |       3 | classical |
+|       3 |       5 | jazz      |
+|       4 |       7 | classical |
+|       5 |       9 | jazz      |
+|       6 |      11 | rock      |
+|       7 |      13 | classical |
+|       8 |      15 | jazz      |
+|       9 |      17 | classical |
+|      10 |      19 | jazz      |
+|      11 |      10 | rock      |
+|      12 |       8 | jazz      |
++---------+---------+-----------+
+12 rows in set (0.03 sec)
+
+mysql> select * from concert;
++------------+-------------------+------------+------------+------------------+
+| concert_no | concert_venue     | concert_in | con_date   | concert_orgniser |
++------------+-------------------+------------+------------+------------------+
+|          1 | Bridgewater Hall  |          1 | 1995-01-06 |               21 |
+|          2 | Bridgewater Hall  |          1 | 1996-05-08 |                3 |
+|          3 | Usher Hall        |          2 | 1995-06-03 |                3 |
+|          4 | Assembly Rooms    |          2 | 1997-09-20 |               21 |
+|          5 | Festspiel Haus    |          3 | 1995-02-21 |                8 |
+|          6 | Royal Albert Hall |          7 | 1993-04-12 |                8 |
+|          7 | Concertgebouw     |          9 | 1993-01-14 |                8 |
+|          8 | Metropolitan      |          4 | 1997-01-15 |               21 |
++------------+-------------------+------------+------------+------------------+
+8 rows in set (0.03 sec)
+
+mysql> select * from performer;
++---------+---------+------------+-----------+
+| perf_no | perf_is | instrument | perf_type |
++---------+---------+------------+-----------+
+|       1 |       2 | violin     | classical |
+|       2 |       4 | viola      | classical |
+|       3 |       6 | banjo      | jazz      |
+|       4 |       8 | violin     | classical |
+|       5 |      12 | guitar     | jazz      |
+|       6 |      14 | violin     | classical |
+|       7 |      16 | trumpet    | jazz      |
+|       8 |      18 | viola      | classical |
+|       9 |      20 | bass       | jazz      |
+|      10 |       2 | flute      | jazz      |
+|      11 |      20 | cornet     | jazz      |
+|      12 |       6 | violin     | jazz      |
+|      13 |       8 | drums      | jazz      |
+|      14 |      10 | violin     | classical |
+|      15 |      12 | cello      | classical |
+|      16 |      14 | viola      | classical |
+|      17 |      16 | flute      | jazz      |
+|      18 |      18 | guitar     | not known |
+|      19 |      20 | trombone   | jazz      |
+|      20 |       3 | horn       | jazz      |
+|      21 |       5 | violin     | jazz      |
+|      22 |       7 | cello      | classical |
+|      23 |       2 | bass       | jazz      |
+|      24 |       4 | violin     | jazz      |
+|      25 |       6 | drums      | classical |
+|      26 |       8 | clarinet   | jazz      |
+|      27 |      10 | bass       | jazz      |
+|      28 |      12 | viola      | classical |
+|      29 |      18 | cello      | classical |
++---------+---------+------------+-----------+
+29 rows in set (0.00 sec)
+
+mysql> select * from performance;
++-----------+------+-----------+--------------+--------------+
+| pfrmnc_no | gave | performed | conducted_by | performed_in |
++-----------+------+-----------+--------------+--------------+
+|         1 |    1 |         1 |           21 |            1 |
+|         2 |    1 |         3 |           21 |            1 |
+|         3 |    1 |         5 |           21 |            1 |
+|         4 |    1 |         2 |            1 |            2 |
+|         5 |    2 |         4 |           21 |            2 |
+|         6 |    2 |         6 |           21 |            2 |
+|         7 |    4 |        19 |            9 |            3 |
+|         8 |    4 |        20 |           10 |            3 |
+|         9 |    5 |        12 |           10 |            4 |
+|        10 |    5 |        13 |           11 |            4 |
+|        11 |    3 |         5 |           13 |            5 |
+|        12 |    3 |         6 |           13 |            5 |
+|        13 |    3 |         7 |           13 |            5 |
+|        14 |    6 |        20 |           14 |            6 |
+|        15 |    8 |        12 |           15 |            7 |
+|        16 |    9 |        16 |           21 |            8 |
+|        17 |    9 |        17 |           21 |            8 |
+|        18 |    9 |        18 |           21 |            8 |
+|        19 |    9 |        19 |           21 |            8 |
+|        20 |    4 |        12 |           10 |            3 |
++-----------+------+-----------+--------------+--------------+
+20 rows in set (0.00 sec)
+
+mysql> select * from place;
++----------+------------+---------------+
+| place_no | place_town | place_country |
++----------+------------+---------------+
+|        1 | Manchester | England       |
+|        2 | Edinburgh  | Scotland      |
+|        3 | Salzburg   | Austria       |
+|        4 | New York   | USA           |
+|        5 | Birmingham | England       |
+|        6 | Glasgow    | Scotland      |
+|        7 | London     | England       |
+|        8 | Chicago    | USA           |
+|        9 | Amsterdam  | Netherlands   |
++----------+------------+---------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from musician;
++------+------------------+------------+------------+---------+-----------+
+| m_no | m_name           | born       | died       | born_in | living_in |
++------+------------------+------------+------------+---------+-----------+
+|    1 | Fred Bloggs      | 2048-01-02 | NULL       |       1 |         2 |
+|    2 | John Smith       | 2050-03-03 | NULL       |       3 |         4 |
+|    3 | Helen Smyth      | 2048-08-08 | NULL       |       4 |         5 |
+|    4 | Harriet Smithson | 2009-05-09 | 1980-09-20 |       5 |         6 |
+|    5 | James First      | 2065-06-10 | NULL       |       7 |         7 |
+|    6 | Theo Mengel      | 2048-08-12 | NULL       |       7 |         1 |
+|    7 | Sue Little       | 2045-02-21 | NULL       |       8 |         9 |
+|    8 | Harry Forte      | 2051-02-28 | NULL       |       1 |         8 |
+|    9 | Phil Hot         | 2042-06-30 | NULL       |       2 |         7 |
+|   10 | Jeff Dawn        | 2045-12-12 | NULL       |       3 |         6 |
+|   11 | Rose Spring      | 2048-05-25 | NULL       |       4 |         5 |
+|   12 | Davis Heavan     | 1975-10-03 | NULL       |       5 |         4 |
+|   13 | Lovely Time      | 2048-12-28 | NULL       |       6 |         3 |
+|   14 | Alan Fluff       | 2035-01-15 | 1997-05-15 |       7 |         2 |
+|   15 | Tony Smythe      | 2032-04-02 | NULL       |       8 |         1 |
+|   16 | James Quick      | 1924-08-02 | NULL       |       9 |         2 |
+|   17 | Freda Miles      | 1920-07-04 | NULL       |       9 |         3 |
+|   18 | Elsie James      | 2047-05-06 | NULL       |       8 |         5 |
+|   19 | Andy Jones       | 2058-10-08 | NULL       |       7 |         6 |
+|   20 | Louise Simpson   | 2048-01-10 | 1998-02-11 |       6 |         6 |
+|   21 | James Steeple    | 2047-01-10 | NULL       |       5 |         6 |
+|   22 | Steven Chaytors  | 2056-03-11 | NULL       |       6 |         7 |
++------+------------------+------------+------------+---------+-----------+
+22 rows in set (0.15 sec)
+
+mysql> select * from has_composed;
++---------+---------+
+| cmpr_no | cmpn_no |
++---------+---------+
+|       1 |       1 |
+|       1 |       8 |
+|       2 |      11 |
+|       3 |       2 |
+|       3 |      13 |
+|       3 |      14 |
+|       3 |      18 |
+|       4 |      12 |
+|       4 |      20 |
+|       5 |       3 |
+|       5 |      13 |
+|       5 |      14 |
+|       6 |      15 |
+|       6 |      21 |
+|       7 |       4 |
+|       7 |       9 |
+|       8 |      16 |
+|       9 |       5 |
+|       9 |      10 |
+|      10 |      17 |
+|      11 |       6 |
+|      12 |       7 |
+|      12 |      19 |
++---------+---------+
+23 rows in set (0.02 sec)
+
+
+
+SOLUTIONS:
+==========
+
+1.Give the organiser's name of the concert in the Assembly Rooms 
+after the first of Feb, 1997. (1 point possible)
+
+mysql> select m.m_name from musician m
+    -> join concert c
+    -> on m.m_no=c.concert_orgniser
+    -> where c.con_date > 1995-02-01 and c.concert_venue='Assembly Rooms';
++---------------+
+| m_name        |
++---------------+
+| James Steeple |
++---------------+
+1 row in set, 1 warning (0.02 sec)
+
+
+
+2.Find all the performers who played guitar or violin and were born in England. 
+(1 point possible)
+
+
+mysql> select m.m_name,p.perf_is from musician m
+    -> join performer p
+    -> on m.m_no=p.perf_is
+    -> join place pl
+    -> on pl.place_no=m.born_in
+    -> where (p.instrument ='violin' or p.instrument='guitar')
+    -> and pl.place_country='England';
++------------------+---------+
+| m_name           | perf_is |
++------------------+---------+
+| Harry Forte      |       8 |
+| Davis Heavan     |      12 |
+| Alan Fluff       |      14 |
+| Theo Mengel      |       6 |
+| James First      |       5 |
+| Harriet Smithson |       4 |
++------------------+---------+
+6 rows in set (0.00 sec)
+
+
+3.List the names of musicians who have conducted concerts in USA together 
+with the towns and dates of these concerts. 
+
+
+mysql> select m.m_name,c.con_date,pl.place_town
+    -> from musician m
+    -> join concert c
+    -> on m.m_no =c.concert_orgniser
+    -> join place pl
+    -> on c.concert_in=pl.place_no
+    -> where pl.place_country='USA';
++---------------+------------+------------+
+| m_name        | con_date   | place_town |
++---------------+------------+------------+
+| James Steeple | 1997-01-15 | New York   |
++---------------+------------+------------+
+1 row in set (0.00 sec)
+
+
+4.How many concerts have featured at least one composition by Andy Jones? 
+List concert date, venue and the composition's title.
+
+
+
+
+
+
+5.List the different instruments played by the musicians and avg number 
+of musicians who play the instrument.
+
+
+
+mysql> select count(perf_is) as count,instrument
+    -> from performer
+    -> group by instrument;
++-------+------------+
+| count | instrument |
++-------+------------+
+|     7 | violin     |
+|     4 | viola      |
+|     1 | banjo      |
+|     2 | guitar     |
+|     1 | trumpet    |
+|     3 | bass       |
+|     2 | flute      |
+|     1 | cornet     |
+|     2 | drums      |
+|     3 | cello      |
+|     1 | trombone   |
+|     1 | horn       |
+|     1 | clarinet   |
++-------+------------+
+13 rows in set (0.04 sec)
+
+
+
+
+6.List the names, dates of birth and the instrument played of living 
+musicians who play a instrument which Theo also plays.
+
+
+mysql> select m.m_name,p.instrument from musician m
+    -> join performer p
+    -> on p.perf_is=m.m_no where p.instrument in
+    -> (select p.instrument from musician m
+    -> join performer p
+    -> on p.perf_is=m.m_no
+    -> where m.m_name ='Theo Mengel') and m.died is null;
++-------------+------------+
+| m_name      | instrument |
++-------------+------------+
+| John Smith  | violin     |
+| Theo Mengel | banjo      |
+| Harry Forte | violin     |
+| Theo Mengel | violin     |
+| Harry Forte | drums      |
+| Jeff Dawn   | violin     |
+| James First | violin     |
+| Theo Mengel | drums      |
++-------------+------------+
+8 rows in set (0.00 sec)
+
+
+
+7.List the name and the number of players for the band whose number 
+of players is greater than the average number of players in each band.
+
+smysql> select b.band_name,p.band_id,count(*) as ct from plays_in p
+    -> join band b on b.band_no=p.band_id group by p.band_id 
+    -> having count(ct) >
+    -> (select avg(count1) from
+    -> (select count(*) as count1 from plays_in group by band_id)a);
++-----------+---------+-------+
+| band_name | band_id | count |
++-----------+---------+-------+
+| ROP       |       1 |     7 |
+| Oh well   |       7 |     6 |
+| AASO      |       2 |     7 |
++-----------+---------+-------+
+3 rows in set (0.00 sec)
+
+8.List the names of musicians who both conduct and compose and live in Britain.
+
+select m.m_name from
+composer c join musician m 
+on c.comp_is = m.m_no
+ 
+join performance p
+on p.conducted_by=m.m_no
+
+join place pl
+on pl.place_no=m.born_in
+
+where pl.place_town='England';
+
+
+9.Show the least commonly played instrument and the number of 
+musicians who play it.
+
+
+mysql> select instrument , count(*) from performer group by
+    -> instrument having count(*)=1;
++------------+----------+
+| instrument | count(*) |
++------------+----------+
+| banjo      |        1 |
+| trumpet    |        1 |
+| cornet     |        1 |
+| trombone   |        1 |
+| horn       |        1 |
+| clarinet   |        1 |
++------------+----------+
+6 rows in set (0.00 sec)
+
+
+mysql> select instrument,count(*) as count1 from performer
+    -> group by instrument having count1=
+    -> (select min(ct) from
+    -> (select count(*) as ct from performer group by instrument) a);
++------------+--------+
+| instrument | count1 |
++------------+--------+
+| banjo      |      1 |
+| trumpet    |      1 |
+| cornet     |      1 |
+| trombone   |      1 |
+| horn       |      1 |
+| clarinet   |      1 |
++------------+--------+
+6 rows in set (0.00 sec)
+
+
+
+
+
+10.List the bands that have played music composed by Sue Little;
+Give the titles of the composition in each case. 
+
+
+select m.m_name, p.place_town from musician m join place p
+on m.born_in = p.place_no where p.place_town =
+(select p.place_town from musician m join place p
+on m.born_in = p.place_no where m.m_name='James First');
+
+
+11.List the name and town of birth of any performer born in the 
+same city as James First.
+
+
+mysql> select m.m_name, p.place_town from musician m join place p
+    -> on m.born_in = p.place_no where p.place_town =
+    -> (select p.place_town from musician m join place p
+    -> on m.born_in = p.place_no where m.m_name='James First');
++-------------+------------+
+| m_name      | place_town |
++-------------+------------+
+| James First | London     |
+| Theo Mengel | London     |
+| Alan Fluff  | London     |
+| Andy Jones  | London     |
++-------------+------------+
+4 rows in set (0.01 sec)
+
+
+
+
+12.Create a list showing for EVERY musician born in Britain the 
+number of compositions and the number of instruments played.
+
+select count(*) as cnt from
+(select m.m_name from musician m join place p on m.born_in=p.place_no where p.place_country='England') t
+group by instrument;
+
+
+select m.m_name,count(perf_is) from place p join musician m on p.place_no=m.born_in join performer pr on m.m_no=pr.perf_is where p.place_country='England';
+
+select perf_is,instrument from performer group by perf_is;
+
+
+
+
+create table x1(select m.m_name,m_no from musician m join place p on m.born_in=p.place_no where p.place_country='England');
+
+select count(instrument),perf_is from performer group by perf_is;
+
+mysql> create table x1(select m.m_name,m_no from musician m join place p on m.born_in=p.place_no where p.place_country='England');
+Query OK, 7 rows affected (1.47 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from x1;
++------------------+------+
+| m_name           | m_no |
++------------------+------+
+| Harriet Smithson |    4 |
+| James First      |    5 |
+| Theo Mengel      |    6 |
+| Davis Heavan     |   12 |
+| Alan Fluff       |   14 |
+| Andy Jones       |   19 |
+| James Steeple    |   21 |
++------------------+------+
+7 rows in set (0.00 sec)
+
+mysql> select count(instrument),perf_is from performer group by perf_is;
++-------------------+---------+
+| count(instrument) | perf_is |
++-------------------+---------+
+|                 3 |       2 |
+|                 2 |       4 |
+|                 3 |       6 |
+|                 3 |       8 |
+|                 3 |      12 |
+|                 2 |      14 |
+|                 2 |      16 |
+|                 3 |      18 |
+|                 3 |      20 |
+|                 2 |      10 |
+|                 1 |       3 |
+|                 1 |       5 |
+|                 1 |       7 |
++-------------------+---------+
+13 rows in set (0.00 sec)
+
+
+select m.m_name,m_no from musician m join place p on m.born_in=p.place_no where p.place_country='England'
+select m.m_name,m_no,count(instrument),perf_is from performer pr join musician m on pr.perf_is=m.m_no join place p on m.born_in=p.place_no  where p.place_country='England' group by perf_is;
+
+mysql> select m.m_name,m_no,count(instrument),perf_is from performer pr join musician m on pr.perf_is=m.m_no join place p on m.born_in=p.place_no  where p.place_country='England' group by perf_is;
++------------------+------+-------------------+---------+
+| m_name           | m_no | count(instrument) | perf_is |
++------------------+------+-------------------+---------+
+| Harriet Smithson |    4 |                 2 |       4 |
+| Theo Mengel      |    6 |                 3 |       6 |
+| Davis Heavan     |   12 |                 3 |      12 |
+| Alan Fluff       |   14 |                 2 |      14 |
+| James First      |    5 |                 1 |       5 |
++------------------+------+-------------------+---------+
+5 rows in set (0.00 sec)
+
+
+13.Give the band name, conductor and contact of the bands performing at the most recent concert in the Royal Albert Hall.
+
+
+
+14.Give a list of musicians associated with Glasgow. 
+Include the name of the musician and the nature of the association - 
+one or more of 'LIVES_IN', 'BORN_IN', 'PERFORMED_IN' AND 'IN_BAND_IN'.
+
+
+
+15.Jeff Dawn plays in a band with someone who plays in a band with Sue Little. Who is it and what are the bands?
+
+
+
