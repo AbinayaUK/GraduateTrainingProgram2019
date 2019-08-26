@@ -201,20 +201,31 @@ mysql> select h.name,h.grade from likes l1
 Return the result sorted by grade, then by name within each grade. 
 (1 point possible)
 
-
-
-select h.name,h.grade
-from highschooler h 
-join friend f 
-on h.id=f.id2 where
-f.id1=f.id2 ;
-
-
-
-select h.name,h.grade
-from highschooler h 
-join friend f 
-on h.id=f.id1;
+mysql> select distinct h.name,h.grade from friend f join highschooler h
+    ->       on f.id1=h.id
+    ->      join highschooler h1 on f.id2=h1.id
+    ->      where h.grade=h1.grade
+    ->      order by h.grade,h.name;
++-----------+-------+
+| name      | grade |
++-----------+-------+
+| Cassandra |     9 |
+| Gabriel   |     9 |
+| Jordan    |     9 |
+| Tiffany   |     9 |
+| Andrew    |    10 |
+| Brittany  |    10 |
+| Haley     |    10 |
+| Kris      |    10 |
+| Alexis    |    11 |
+| Gabriel   |    11 |
+| Jessica   |    11 |
+| John      |    12 |
+| Jordan    |    12 |
+| Kyle      |    12 |
+| Logan     |    12 |
++-----------+-------+
+15 rows in set (0.00 sec)
 
 
 
@@ -223,6 +234,23 @@ find if they have a friend C in common (who can introduce them!).
 For all such trios, return the name and grade of A, B, and C. (1 point possible)
 
 
+mysql> select h1.name,h1.grade,h3.name,h3.grade,h2.name,h2.grade from likes l left join friend f
+    ->      on l.id1=f.id1 and l.id2=f.id2
+    ->      join friend f1 on l.id1=f1.id1
+    ->      join friend f2 on l.id2=f2.id1
+    ->      join highschooler h1 on l.id1=h1.id
+    ->      join highschooler h2 on f1.id2=h2.id
+    ->      join highschooler h3 on l.id2=h3.id
+    ->      where f.id1 is null and f.id2 is null
+    ->      and f1.id2=f2.id2;
++--------+-------+-----------+-------+---------+-------+
+| name   | grade | name      | grade | name    | grade |
++--------+-------+-----------+-------+---------+-------+
+| Andrew |    10 | Cassandra |     9 | Gabriel |     9 |
+| Austin |    11 | Jordan    |    12 | Andrew  |    10 |
+| Austin |    11 | Jordan    |    12 | Kyle    |    12 |
++--------+-------+-----------+-------+---------+-------+
+3 rows in set (0.06 sec)
 
 
 
@@ -269,14 +297,41 @@ mysql> select h.name,h.grade
 different student C, return the names and grades of A, B, and C. 
 (1 point possible)
 
-
-
+mysql> select h1.name,h1.grade,h2.name,h2.grade,h3.name,h3.grade from likes l1 join likes l2
+    ->      on l1.id2=l2.id1 and l1.id1!=l2.id2
+    ->      join highschooler h1 on l1.id1=h1.id
+    ->      join highschooler h2 on l1.id2=h2.id
+    ->      join highschooler h3 on l2.id2=h3.id;
++---------+-------+-----------+-------+---------+-------+
+| name    | grade | name      | grade | name    | grade |
++---------+-------+-----------+-------+---------+-------+
+| Andrew  |    10 | Cassandra |     9 | Gabriel |     9 |
+| Gabriel |    11 | Alexis    |    11 | Kris    |    10 |
++---------+-------+-----------+-------+---------+-------+
+2 rows in set (0.00 sec)
 
 
 11)Find those students for whom all of their friends are in different grades 
 from themselves. Return the students' names and grades.(1 point possible)
 
-select 
+mysql> select distinct h1.name,h1.grade from friend f  join highschooler h1
+    ->       on f.id1=h1.id
+    ->       join highschooler h2 on f.id2=h2.id
+    ->       where h1.grade!=h2.grade;
++-----------+-------+
+| name      | grade |
++-----------+-------+
+| Andrew    |    10 |
+| Alexis    |    11 |
+| Gabriel   |     9 |
+| Austin    |    11 |
+| Jordan    |    12 |
+| Tiffany   |     9 |
+| Cassandra |     9 |
+| Kyle      |    12 |
+| Jessica   |    11 |
++-----------+-------+
+9 rows in set (0.00 sec)
 
 
 
