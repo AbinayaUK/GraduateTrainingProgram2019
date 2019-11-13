@@ -1,0 +1,46 @@
+"""arithmetic operation"""
+def addition(input1, input2):
+    """calculating addition"""
+    return input1+input2
+def subtraction(input1, input2):
+    """calculating subtraction"""
+    return input1-input2
+def multiply(input1, input2):
+    """calculating multiply"""
+    return input1*input2
+def divide(input1, input2):
+    """calculating divide"""
+    return input1/input2
+
+
+
+
+
+
+"""import module"""
+import unittest
+import calc_arithmetic
+
+
+
+class Test(unittest.TestCase):
+    """main class of the program"""
+
+    def test_addition(self):
+        """calculating the positive addition value"""
+        self.assertEqual(calc_arithmetic.addition(2, 3), 5)
+
+    def test_subtraction(self):
+        """calculating the subtraction value"""
+        self.assertEqual(calc_arithmetic.subtraction(5, 3), 2)
+
+    def test_multipy(self):
+        """calculating the multiplication """
+        self.assertEqual(calc_arithmetic.multiply(5, 3), 15)
+    def test_divide(self):
+        """calculating the divition"""
+        self.assertEqual(calc_arithmetic.divide(4, 2), 2)
+
+
+if __name__ == '__main__':
+    unittest.main()
