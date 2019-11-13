@@ -13,6 +13,21 @@ def divide(input1, input2):
     return input1/input2
 
 
+(venv) C:\Users\abinaya.udaya.kumar\PycharmProjects\sample>coverage run unit_test.py
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+
+
+
+Name             Stmts   Miss  Cover
+------------------------------------
+Calculation.py       8      0   100%
+unit_test.py        13      0   100%
+------------------------------------
+TOTAL               21      0   100%
 
 
 
@@ -44,3 +59,26 @@ class Test(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    
+    
+    
+    
+    
+    
+(venv) C:\Users\abinaya.udaya.kumar\PycharmProjects\sample>pylint unit_test.py
+
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 9.23/10, +0.77)
+
+
+(venv) C:\Users\abinaya.udaya.kumar\PycharmProjects\sample>pylint calc_arithmetic.py
+
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 8.75/10, +1.25)
+
+    
+    
+    
+    
+    
+    
